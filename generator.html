@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset='utf-8'>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/web-prog-project/assets/css/main.css">
+        <title>A N G E L or the way music sends you to heaven</title>
+        <link rel="canonical" href="/web-prog-project/" />
+    </head>
+    <header>
+        <div class="container">
+            <h1>A N G E L</h1>
+            <h2>The way music sends you to heaven</h2>
+            <section id="downloads">
+                <a href="/web-prog-project/index.html" class="btn btn-github"><span class="icon"></span> Home </a>
+                <a href="/web-prog-project/generator.html" class="btn btn-github"><span class="icon"></span> Generator </a>
+                <a href="/web-prog-project/aboutus.html" class="btn btn-github"><span class="icon"></span> About Us </a>
+            </section>
+        </div>
+    </header>
+  <body>
+<div >
+  <div class="box">
+    <div id="songImage"></div>
+    <div >
+      <h4 id="song"></h4>
+      <h4 id="artist"></h4>
+      <h4 id="releaseDate"></h4>
+      <button class="btn btn-githug" onclick="newRandomSong()"><span>generate song</span></button>
+      <br>
+      
+
+    </div>
+  </div>
+</div>
+</body> 
+<script>
+    var CLIENTID = "Eq8KSecb2Yz4Lq--EUjuGWH_8OifHCRwdwHr1ztKdLx5Qk_zCZG--AXPSQzMXhL-";
+var CLIENTSECRET = "-3Ynmxt9BZab3Qs5sbr_GdzGxXoGqSqbSISFuEQwquYeVm-5-A3nFIcgUOvDSY731GT-hhJtvTK5jYDccT7juQ";
+var accessToken= "?access_token=CXyFeSBw2lAdG41xkuU3LS6a_nwyxwwCz2dCkUohw-rw0C49x2HqP__6_4is5RPx";
+var API = "https://api.genius.com/search";
+var APISong = "https://api.genius.com/songs/";
+var songID = "2471960";
+var maxSong= 2471960; 
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+var xhr = new XMLHttpRequest(); 
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === 4) {
+    if (xhr.status === 200 || xhr.status === 304) {
+
+    }
+  }
+};
+xhr.open("GET", APISong+songID+accessToken, false);
+
+xhr.send(); 
+
+demo=xhr.response;
+
+var json = JSON.parse(demo);
+var song = json['response']['song'];
+
+
+function newRandomSong() {
+  songID =getRandomInt(1,maxSong);
+  randomSong();
+}
+
+function randomSong(){
+  xhr.open("GET", APISong+songID+accessToken, false);
+  xhr.send(); 
+  demo=xhr.response;
+  
+  while (xhr.status===404){ 
+      songID =getRandomInt(1,maxSong);
+      xhr.open("GET", APISong+songID+accessToken, false);
+      xhr.send(); 
+      demo=xhr.response;
+  }
+  
+  json = JSON.parse(demo);
+  song = json['response']['song'];
+  document.getElementById("songImage").innerHTML = "<img src=\""+song['song_art_image_url']+"\"alt=\"Some Awesome Album Art\" style=\"width:200px;height:200px;\">";
+
+
+
+document.getElementById("song").innerHTML = "song: <a target=\"_blank\" href="+song['url']+" >"+song['title'].toUpperCase()+"</a>";
+  
+document.getElementById("artist").innerHTML = "artist: <a target=\"_blank\"  href="+song['primary_artist']['url']+">"+song['primary_artist']['name'].toUpperCase()+"</a>";
+document.getElementById("releaseDate").innerHTML = "release: "+song['release_date'];
+}
+
+$(document).ready(function() {
+  randomSong(); 
+});
+</script>
+</html>
